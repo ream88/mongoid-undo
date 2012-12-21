@@ -6,8 +6,8 @@ Gem::Specification.new do |gem|
   gem.authors       = 'Mario Uher'
   gem.email         = 'uher.mario@gmail.com'
   gem.homepage      = 'https://github.com/haihappen/mongoid-undo'
-  gem.summary       = 'TODO: summary'
-  gem.description   = 'TODO: description'
+  gem.summary       = 'Super simple versioning for your Mongoid app.'
+  gem.description   = 'mongoid-undo provides a super simple and easy to use versioning system for Mongo apps.'
 
   gem.files         = `git ls-files`.split("\n")
   gem.require_path  = 'lib'

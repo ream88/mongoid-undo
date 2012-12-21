@@ -1,5 +1,7 @@
 # mongoid-undo
 
+Super simple versioning for your Mongoid app.
+
 TODO: Add usage and installation instructions.
 
 ## Contributing
