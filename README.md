@@ -1,8 +1,8 @@
 # mongoid-undo
 
 Super simple undo for your Mongoid app, based on both great modules
-[`Mongoid::Paranoia`](http://mongoid.org/en/mongoid/docs/extras.html#paranoia) and
-[`Mongoid::Versioning`](http://mongoid.org/en/mongoid/docs/extras.html#versioning).
+[Mongoid::Paranoia](http://mongoid.org/en/mongoid/docs/extras.html#paranoia) and
+[Mongoid::Versioning](http://mongoid.org/en/mongoid/docs/extras.html#versioning).
 
 ## How does it work?
 
