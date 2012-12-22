@@ -3,8 +3,6 @@ require File.expand_path('../spec_helper', __FILE__)
 module Mongoid
   module Undo
     describe self do
-      include ActiveSupport::Testing::Assertions
-
       class Document
         include Mongoid::Document
         include Mongoid::Undo
@@ -13,105 +11,138 @@ module Mongoid
       end
 
 
-      subject { Document.create(name: 'Version 1') }
+      subject { Document.new(name: 'foo') }
 
 
-      describe 'undoing create' do
-        before { subject.undo }
+      describe 'creating' do
+        before { subject.save }
 
 
-        it 'deletes' do
-          subject.persisted?.wont_equal true
-          subject.deleted_at.wont_be_nil
+        it 'sets action to :create' do
+          subject.action.must_equal :create
         end
 
 
-        describe 'and then redoing' do
-          it 'redoes' do
-            subject.redo
-            
-            subject.persisted?.must_equal true
-            subject.deleted_at.must_be_nil
+        describe 'undoing' do
+          before { subject.undo }
+
+
+          it 'deletes' do
+            subject.persisted?.wont_equal true
           end
-        end
 
 
-        it 'returns proper state' do
-          3.times do
-            subject.undo
+          it 'keeps :create action' do
             subject.action.must_equal :create
           end
-        end
-      end
 
 
-      describe 'undoing update' do
-        before { subject.update_attributes(name: subject.name.next) }
+          describe 'redoing' do
+            before { subject.redo }
 
 
-        it 'creates a new version' do
-          assert_difference 'subject.version', +1 do
-            subject.undo
+            it 'restores' do
+              subject.persisted?.must_equal true
+            end
+
+
+            it 'keeps :create action' do
+              subject.action.must_equal :create
+            end
           end
-          
-          # Ensure the new version is saved to the db
-          subject.persisted?.must_equal true
-          subject.name.must_equal 'Version 1'
         end
 
 
-        it 'returns proper state' do
-          3.times do
-            subject.undo
+        describe 'updating' do
+          before { subject.update_attributes(name: 'bar') }
+
+
+          it 'sets action to :update' do
             subject.action.must_equal :update
           end
+
+
+          describe 'undoing' do
+            before { subject.undo }
+
+
+            it 'retrieves' do
+              subject.name.must_equal 'foo'
+            end
+
+
+            it 'saves a new version' do
+              subject.version.must_equal 3
+            end
+
+
+            it 'keeps :update action' do
+              subject.action.must_equal :update
+            end
+
+
+            describe 'redoing' do
+              before { subject.redo }
+
+
+              it 'retrieves' do
+                subject.name.must_equal 'bar'
+              end
+
+
+              it 'saves a new version' do
+                subject.version.must_equal 4
+              end
+
+
+              it 'keeps :update action' do
+                subject.action.must_equal :update
+              end
+            end
+          end
         end
-      end
 
 
-      describe 'undoing destroy' do
-        describe 'having one version' do
+        describe 'destroying' do
           before { subject.destroy }
 
 
-          it 'restores' do
-            subject.undo
-            
-            subject.persisted?.must_equal true
-            subject.deleted_at.must_be_nil
+          it 'sets action to :destroy' do
+            subject.action.must_equal :destroy
           end
 
 
-          it 'returns proper state' do
-            3.times do
-              subject.undo
+          it 'marks as destroyed' do
+            subject.persisted?.must_equal false
+          end
+
+
+          describe 'undoing' do
+            before { subject.undo }
+
+
+            it 'restores' do
+              subject.persisted?.wont_equal false
+            end
+
+
+            it 'keeps :destroy action' do
               subject.action.must_equal :destroy
             end
-          end
-        end
 
 
-        describe 'having multiple versions' do
-          before do
-            3.times { subject.update_attributes(name: subject.name.next) }
-            subject.destroy
-          end
+            describe 'redoing' do
+              before { subject.redo }
 
 
-          it 'restores' do
-            assert_difference 'subject.version', 0 do
-              subject.undo
-            end
-            
-            subject.persisted?.must_equal true
-            subject.deleted_at.must_be_nil
-          end
+              it 'deletes' do
+                subject.persisted?.must_equal false
+              end
 
 
-          it 'returns proper state' do
-            3.times do
-              subject.undo
-              subject.action.must_equal :destroy
+              it 'keeps :destroy action' do
+                subject.action.must_equal :destroy
+              end
             end
           end
         end
@@ -125,7 +156,7 @@ module Mongoid
       end
 
 
-      describe :state do
+      describe :action do
         it 'is a symbol' do
           subject.fields['action'].options[:type].must_equal Symbol
         end
@@ -137,7 +168,7 @@ module Mongoid
       end
 
 
-      describe :retrieve do
+      describe 'localization' do
         class Localized
           include Mongoid::Document
           include Mongoid::Undo
@@ -146,26 +177,16 @@ module Mongoid
         end
 
 
-        subject { Localized.new }
-
-
         it 'works too with localized fields' do
-          subject.update_attributes language: 'English'
-          subject.update_attributes language: 'English Updated'
+          subject = Localized.create(language: 'English')
           
-          assert_difference 'subject.version', +1 do
-            subject.send(:retrieve)
-          end
+          subject.update_attributes(language: 'English Updated')
+          subject.undo
           subject.language.must_equal 'English'
           
-          assert_difference 'subject.version', +1 do
-            subject.send(:retrieve)
-          end
+          subject.redo
           subject.language.must_equal 'English Updated'
         end
-
-
-        after { I18n.locale = I18n.default_locale }
       end
     end
   end
