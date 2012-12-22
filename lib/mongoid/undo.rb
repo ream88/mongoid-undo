@@ -22,19 +22,19 @@ module Mongoid
     include Mongoid::Versioning
 
     included do
-      field :action, type: Symbol, versioned: false
+      field :_action, type: Symbol, versioned: false
       index deleted_at: 1
 
       [:create, :update, :destroy].each do |action|
         set_callback action, :after do
-          collection.find(atomic_selector).update('$set' => { action: action })
+          collection.find(atomic_selector).update('$set' => { _action: action })
           reload
         end
       end
     end
 
     def undo
-      case action
+      case _action
       when :create, :destroy
         deleted_at.present? ? restore : delete
       when :update

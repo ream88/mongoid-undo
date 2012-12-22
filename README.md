@@ -8,7 +8,7 @@ Super simple undo for your Mongoid app, based on both great modules
 
 * `Mongoid::Paranoia` is used to mark documents as deleted, instead of deleting them really, otherwise restoring would be impossible ;).
 * `Mongoid::Versioning` is used to keep the older versions of your document, so we can restore them.
-* `Mongoid::Undo` adds an `action` field to your documents, so we can easily determine whether it was created, updated, or destroyed.
+* `Mongoid::Undo` adds an `_action` field to your documents, so we can easily determine whether it was created, updated, or destroyed.
 
 But instead of explaining all the details, you should get the idea by looking at the Usage section.
 

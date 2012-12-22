@@ -12,6 +12,8 @@ module Mongoid
 
 
       subject { Document.new(name: 'foo') }
+      let(:name) { subject.name }
+      let(:action) { subject.send(:_action) }
 
 
       describe 'creating' do
@@ -19,7 +21,7 @@ module Mongoid
 
 
         it 'sets action to :create' do
-          subject.action.must_equal :create
+          action.must_equal :create
         end
 
 
@@ -33,7 +35,7 @@ module Mongoid
 
 
           it 'keeps :create action' do
-            subject.action.must_equal :create
+            action.must_equal :create
           end
 
 
@@ -47,7 +49,7 @@ module Mongoid
 
 
             it 'keeps :create action' do
-              subject.action.must_equal :create
+              action.must_equal :create
             end
           end
         end
@@ -58,7 +60,7 @@ module Mongoid
 
 
           it 'sets action to :update' do
-            subject.action.must_equal :update
+            action.must_equal :update
           end
 
 
@@ -67,7 +69,7 @@ module Mongoid
 
 
             it 'retrieves' do
-              subject.name.must_equal 'foo'
+              name.must_equal 'foo'
             end
 
 
@@ -77,7 +79,7 @@ module Mongoid
 
 
             it 'keeps :update action' do
-              subject.action.must_equal :update
+              action.must_equal :update
             end
 
 
@@ -86,7 +88,7 @@ module Mongoid
 
 
               it 'retrieves' do
-                subject.name.must_equal 'bar'
+                name.must_equal 'bar'
               end
 
 
@@ -96,7 +98,7 @@ module Mongoid
 
 
               it 'keeps :update action' do
-                subject.action.must_equal :update
+                action.must_equal :update
               end
             end
           end
@@ -108,7 +110,7 @@ module Mongoid
 
 
           it 'sets action to :destroy' do
-            subject.action.must_equal :destroy
+            action.must_equal :destroy
           end
 
 
@@ -127,7 +129,7 @@ module Mongoid
 
 
             it 'keeps :destroy action' do
-              subject.action.must_equal :destroy
+              action.must_equal :destroy
             end
 
 
@@ -141,7 +143,7 @@ module Mongoid
 
 
               it 'keeps :destroy action' do
-                subject.action.must_equal :destroy
+                action.must_equal :destroy
               end
             end
           end
@@ -156,14 +158,14 @@ module Mongoid
       end
 
 
-      describe :action do
+      describe :_action do
         it 'is a symbol' do
-          subject.fields['action'].options[:type].must_equal Symbol
+          subject.fields['_action'].options[:type].must_equal Symbol
         end
 
 
         it 'is versionless' do
-          subject.fields['action'].options[:versioned].must_equal false
+          subject.fields['_action'].options[:versioned].must_equal false
         end
       end
 
