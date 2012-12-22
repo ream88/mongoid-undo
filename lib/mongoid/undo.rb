@@ -27,7 +27,7 @@ module Mongoid
 
       [:create, :update, :destroy].each do |action|
         set_callback action, :after do
-          collection.find(atomic_selector).update '$set' => { action: action }
+          collection.find(atomic_selector).update('$set' => { action: action })
           reload
         end
       end
@@ -45,7 +45,7 @@ module Mongoid
 
   private
     def retrieve
-      update_attributes versions.last.versioned_attributes.except('version')
+      update_attributes(versions.last.versioned_attributes.except('version'))
     end
   end
 end
