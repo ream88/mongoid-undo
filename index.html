@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mongoid-undo by haihappen</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mongoid-undo</h1>
+        <p>Super simple undo for your Mongoid app.</p>
+        <p class="view"><a href="https://github.com/haihappen/mongoid-undo">View the Project on GitHub <small>haihappen/mongoid-undo</small></a></p>
+        <ul>
+          <li><a href="https://github.com/haihappen/mongoid-undo/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/haihappen/mongoid-undo/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/haihappen/mongoid-undo">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>mongoid-undo</h1>
+
+<p>Super simple undo for your Mongoid app, based on both great modules
+<a href="http://mongoid.org/en/mongoid/docs/extras.html#paranoia">Mongoid::Paranoia</a> and
+<a href="http://mongoid.org/en/mongoid/docs/extras.html#versioning">Mongoid::Versioning</a>.</p>
+
+<h2>How does it work?</h2>
+
+<ul>
+<li>
+<code>Mongoid::Paranoia</code> is used to mark documents as deleted, instead of deleting them really, otherwise restoring would be impossible ;).</li>
+<li>
+<code>Mongoid::Versioning</code> is used to keep the older versions of your document, so we can restore them.</li>
+<li>
+<code>Mongoid::Undo</code> adds an <code>_action</code> field to your documents, so we can easily determine whether it was created, updated, or destroyed.</li>
+</ul><p>But instead of explaining all the details, you should get the idea by looking at the Usage section.</p>
+
+<h2>Usage</h2>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Document</span>
+  <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Document</span>
+  <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Undo</span>
+<span class="k">end</span>
+</pre></div>
+
+<h3>Creating (and undoing)</h3>
+
+<div class="highlight"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">create</span>
+<span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; true</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">undo</span>
+<span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; false</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">redo</span> <span class="c1"># A nice alias for undo ;)</span>
+<span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; true</span>
+</pre></div>
+
+<h3>Updating (and undoing)</h3>
+
+<div class="highlight"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">'foo'</span><span class="p">)</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">update_attributes</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">'bar'</span><span class="p">)</span>
+<span class="n">document</span><span class="o">.</span><span class="n">name</span> <span class="c1">#=&gt; 'bar'</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">undo</span>
+<span class="n">document</span><span class="o">.</span><span class="n">name</span> <span class="c1">#=&gt; 'foo'</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">redo</span>
+<span class="n">document</span><span class="o">.</span><span class="n">name</span> <span class="c1">#=&gt; 'bar'</span>
+</pre></div>
+
+<h3>Destroying (and undoing)</h3>
+
+<div class="highlight"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">first</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">destroy</span>
+<span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; false</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">undo</span>
+<span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; true</span>
+
+<span class="n">document</span><span class="o">.</span><span class="n">redo</span>
+<span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; false</span>
+</pre></div>
+
+<h2>Installation</h2>
+
+<p>In your Gemfile:</p>
+
+<div class="highlight"><pre><span class="n">gem</span> <span class="s1">'mongoid-undo'</span>
+</pre></div>
+
+<h2>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Added some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol><h2>Copyright</h2>
+
+<p>(The MIT license)</p>
+
+<p>Copyright (c) 2012 Mario Uher</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/haihappen">haihappen</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30324853-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
