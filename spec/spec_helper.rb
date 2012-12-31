@@ -4,4 +4,6 @@ require 'minitest/spec'
 
 require './lib/mongoid/undo'
 
-Mongoid.load!(File.expand_path('../mongoid.yml', __FILE__), 'test')
+
+# Load support *.rb files in ./support
+Dir[File.expand_path('../support/*.rb', __FILE__)].each { |file| require file }
