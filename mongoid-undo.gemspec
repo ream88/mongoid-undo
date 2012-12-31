@@ -1,4 +1,5 @@
-require './lib/mongoid/undo/version'
+$: << File.expand_path('../lib', __FILE__)
+require 'mongoid/undo/version'
 
 Gem::Specification.new do |gem|
   gem.name          = 'mongoid-undo'
