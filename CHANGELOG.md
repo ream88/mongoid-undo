@@ -1,5 +1,6 @@
 # 0.5.0 (not released yet)
 * Use Rake::FileList.
+* \#1 Removed localization monkey patch. mongoid >= 3.0.10 is now required!
 
 # 0.4.0 (December 31, 2012)
 * Better specs structure.
