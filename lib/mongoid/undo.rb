@@ -1,19 +1,6 @@
 require 'active_support'
 require 'mongoid'
 
-module Mongoid::Fields
-  class Localized
-    def mongoize(object)
-      if object.is_a? ::Hash
-        object
-      else
-        { ::I18n.locale.to_s => type.mongoize(object) }
-      end
-    end
-  end
-end
-
-
 module Mongoid
   module Undo
     extend ActiveSupport::Concern
