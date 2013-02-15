@@ -1,3 +1,7 @@
+# 0.6.0 (February 15, 2013)
+* Updated Gemfile for Bundler 1.2.4+.
+* Easier mongoid config.
+
 # 0.5.0 (February 14, 2013)
 * Use Rake::FileList.
 * \#1 Removed localization monkey patch. mongoid >= 3.0.10 is now required!
