@@ -1,3 +1,6 @@
+# 0.7.0 (February 8, 2014)
+* Simpler tests.
+
 # 0.6.0 (February 15, 2013)
 * Updated Gemfile for Bundler 1.2.4+.
 * Easier mongoid config.
