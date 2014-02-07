@@ -84,7 +84,7 @@ gem 'mongoid-undo'
 
 (The MIT license)
 
-Copyright (c) 2012 - 2013 Mario Uher
+Copyright (c) 2012 - 2014 Mario Uher
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
