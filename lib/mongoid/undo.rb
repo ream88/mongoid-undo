@@ -32,7 +32,7 @@ module Mongoid
 
   private
     def retrieve
-      update_attributes(versions.last.versioned_attributes.except('version'))
+      update_attributes(versions.last.versioned_attributes.except('version', 'updated_at'))
     end
   end
 end

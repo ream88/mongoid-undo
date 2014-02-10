@@ -14,6 +14,14 @@ class Localized
   field :language, localize: true, type: String
 end
 
+class Timestamped
+  include Mongoid::Document
+  include Mongoid::Undo
+  include Mongoid::Timestamps
+
+  field :name, type: String
+end
+
 class UndoTest < Minitest::Test
   def test_create
     document = Document.create(name: 'foo')
@@ -86,5 +94,20 @@ class UndoTest < Minitest::Test
 
     document.redo
     assert_equal 'English Updated', document.language
+  end
+
+
+  def test_updated_at_timestamp
+    document = Timestamped.create(name: 'foo')
+    updated_at = document.updated_at
+
+    document.update_attributes(name: 'bar')
+    assert_not_equal updated_at, document.updated_at
+
+    document.undo
+    assert_not_equal updated_at, document.updated_at
+
+    document.redo
+    assert_not_equal updated_at, document.updated_at
   end
 end
