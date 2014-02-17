@@ -22,7 +22,7 @@ class Timestamped
   field :name, type: String
 end
 
-class UndoTest < Minitest::Test
+class UndoTest < Minitest::Unit::TestCase
   def test_create
     document = Document.create(name: 'foo')
     assert_equal :create, document.action
