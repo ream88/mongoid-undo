@@ -6,7 +6,7 @@ require 'mongoid/undo'
 
 Mongoid.load!(File.expand_path('../mongoid.yml', __FILE__), 'test')
 
-class Minitest::Test
+class MiniTest::Unit::TestCase
   alias_method :assert_not, :refute
   alias_method :assert_not_equal, :refute_equal
 end
