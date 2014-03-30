@@ -27,13 +27,15 @@
         </ul>
       </header>
       <section>
-        <h1>mongoid-undo</h1>
+        <h1>
+<a name="mongoid-undo" class="anchor" href="#mongoid-undo"><span class="octicon octicon-link"></span></a>mongoid-undo</h1>
 
 <p>Super simple undo for your Mongoid app, based on both great modules
 <a href="http://mongoid.org/en/mongoid/docs/extras.html#paranoia">Mongoid::Paranoia</a> and
 <a href="http://mongoid.org/en/mongoid/docs/extras.html#versioning">Mongoid::Versioning</a>.</p>
 
-<h2>How does it work?</h2>
+<h2>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How does it work?</h2>
 
 <ul>
 <li>
@@ -42,19 +44,29 @@
 <code>Mongoid::Versioning</code> is used to keep the older versions of your document, so we can restore them.</li>
 <li>
 <code>Mongoid::Undo</code> adds an <code>action</code> field to your documents, so we can easily determine whether it was created, updated, or destroyed.</li>
-</ul><p>But instead of explaining all the details, you should get the idea by looking at the Usage section.</p>
+</ul><p>But instead of explaining all the details, you should get the idea by looking at the <a href="https://github.com/haihappen/mongoid-undo#usage">Usage</a> section.</p>
 
-<h2>Usage</h2>
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Document</span>
+<p>In your Gemfile:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s1">'mongoid-undo'</span>
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">Document</span>
   <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Document</span>
   <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Undo</span>
 <span class="k">end</span>
 </pre></div>
 
-<h3>Creating (and undoing)</h3>
+<h3>
+<a name="creating-and-undoing" class="anchor" href="#creating-and-undoing"><span class="octicon octicon-link"></span></a>Creating (and undoing)</h3>
 
-<div class="highlight"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">create</span>
+<div class="highlight highlight-ruby"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">create</span>
 <span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; true</span>
 
 <span class="n">document</span><span class="o">.</span><span class="n">undo</span>
@@ -64,9 +76,10 @@
 <span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; true</span>
 </pre></div>
 
-<h3>Updating (and undoing)</h3>
+<h3>
+<a name="updating-and-undoing" class="anchor" href="#updating-and-undoing"><span class="octicon octicon-link"></span></a>Updating (and undoing)</h3>
 
-<div class="highlight"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">'foo'</span><span class="p">)</span>
+<div class="highlight highlight-ruby"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">'foo'</span><span class="p">)</span>
 
 <span class="n">document</span><span class="o">.</span><span class="n">update_attributes</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s1">'bar'</span><span class="p">)</span>
 <span class="n">document</span><span class="o">.</span><span class="n">name</span> <span class="c1">#=&gt; 'bar'</span>
@@ -78,9 +91,10 @@
 <span class="n">document</span><span class="o">.</span><span class="n">name</span> <span class="c1">#=&gt; 'bar'</span>
 </pre></div>
 
-<h3>Destroying (and undoing)</h3>
+<h3>
+<a name="destroying-and-undoing" class="anchor" href="#destroying-and-undoing"><span class="octicon octicon-link"></span></a>Destroying (and undoing)</h3>
 
-<div class="highlight"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">first</span>
+<div class="highlight highlight-ruby"><pre><span class="n">document</span> <span class="o">=</span> <span class="no">Document</span><span class="o">.</span><span class="n">first</span>
 
 <span class="n">document</span><span class="o">.</span><span class="n">destroy</span>
 <span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; false</span>
@@ -92,14 +106,25 @@
 <span class="n">document</span><span class="o">.</span><span class="n">persisted?</span> <span class="c1">#=&gt; false</span>
 </pre></div>
 
-<h2>Installation</h2>
+<h3>
+<a name="callbacks" class="anchor" href="#callbacks"><span class="octicon octicon-link"></span></a>Callbacks</h3>
 
-<p>In your Gemfile:</p>
+<p>Mongoid::Undo defines two callbacks which are called before and after <code>undo</code>, respectively <code>redo</code>. Both are based on <code>ActiveModel::Callbacks</code> which means they behave like the allready known Rails callbacks.</p>
 
-<div class="highlight"><pre><span class="n">gem</span> <span class="s1">'mongoid-undo'</span>
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">Document</span>
+  <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Document</span>
+  <span class="kp">include</span> <span class="no">Mongoid</span><span class="o">::</span><span class="no">Undo</span>
+
+  <span class="n">before_undo</span> <span class="k">do</span>
+    <span class="c1"># Do something fancy.</span>
+  <span class="k">end</span>
+
+  <span class="n">before_redo</span> <span class="p">{</span> <span class="kp">false</span> <span class="p">}</span> <span class="c1"># Don't allow redoing.</span>
+<span class="k">end</span>
 </pre></div>
 
-<h2>Contributing</h2>
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
 <li>Fork it</li>
@@ -107,11 +132,12 @@
 <li>Commit your changes (<code>git commit -am 'Added some feature'</code>)</li>
 <li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
 <li>Create new Pull Request</li>
-</ol><h2>Copyright</h2>
+</ol><h2>
+<a name="copyright" class="anchor" href="#copyright"><span class="octicon octicon-link"></span></a>Copyright</h2>
 
 <p>(The MIT license)</p>
 
-<p>Copyright (c) 2012 - 2013 Mario Uher</p>
+<p>Copyright (c) 2012 - 2014 Mario Uher</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
