@@ -1,3 +1,6 @@
+# 0.8.0 (March 30, 2014)
+* Adds both callbacks for undo and redo.
+
 # 0.7.0 (February 8, 2014)
 * Simpler tests.
 

@@ -110,4 +110,47 @@ class UndoTest < Minitest::Unit::TestCase
     document.redo
     assert_not_equal updated_at, document.updated_at
   end
+
+
+  def test_callbacks
+    document = Document.create(name: 'foo')
+    mock = MiniTest::Mock.new
+
+    document.class.before_undo { mock.before_undo }
+    document.class.after_undo { mock.after_undo }
+
+    mock.expect :before_undo, nil
+    mock.expect :after_undo, nil
+
+    document.undo
+    mock.verify
+
+    document.class.before_redo { mock.before_redo }
+    document.class.after_redo { mock.after_redo }
+
+    mock.expect :before_redo, nil
+    mock.expect :after_redo, nil
+
+    document.redo
+    mock.verify
+  end
+
+
+  def test_disabling_undo_via_callbacks
+    document = Document.create(name: 'foo')
+    document.destroy
+
+    # Disable undoing
+    document.class.before_undo proc { false }
+
+    assert_no_difference 'Document.count' do
+      document.undo
+    end
+  end
+
+
+  def teardown
+    Document.reset_callbacks :undo
+    Document.reset_callbacks :redo
+  end
 end

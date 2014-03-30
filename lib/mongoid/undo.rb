@@ -7,6 +7,7 @@ module Mongoid
 
     include Mongoid::Paranoia
     include Mongoid::Versioning
+    include Mongoid::Callbacks
 
     included do
       field :action, type: Symbol, versioned: false
@@ -18,14 +19,18 @@ module Mongoid
           reload
         end
       end
+
+      define_model_callbacks :undo, :redo
     end
 
     def undo
-      case action
-      when :create, :destroy
-        deleted_at.present? ? restore : delete
-      when :update
-        retrieve
+      run_callbacks __callee__ do
+        case action
+        when :create, :destroy
+          deleted_at.present? ? restore : delete
+        when :update
+          retrieve
+        end
       end
     end
     alias_method :redo, :undo

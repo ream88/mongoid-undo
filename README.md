@@ -64,6 +64,23 @@ document.redo
 document.persisted? #=> false
 ```
 
+### Callbacks
+
+Mongoid::Undo defines two callbacks which are called before and after `undo`, respectively `redo`. Both are based on `ActiveModel::Callbacks`which means they behave like the allready known Rails callbacks.
+
+```ruby
+class Document
+  include Mongoid::Document
+  include Mongoid::Undo
+
+  before_undo do
+    # Do something fancy.
+  end
+
+  before_redo { false } # Don't allow redoing.
+```
+
+
 ## Installation
 
 In your Gemfile:
@@ -79,6 +96,7 @@ gem 'mongoid-undo'
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
 
 ## Copyright
 
