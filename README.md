@@ -10,7 +10,17 @@ Super simple undo for your Mongoid app, based on both great modules
 * `Mongoid::Versioning` is used to keep the older versions of your document, so we can restore them.
 * `Mongoid::Undo` adds an `action` field to your documents, so we can easily determine whether it was created, updated, or destroyed.
 
-But instead of explaining all the details, you should get the idea by looking at the Usage section.
+But instead of explaining all the details, you should get the idea by looking at the [Usage](https://github.com/haihappen/mongoid-undo#usage) section.
+
+
+## Installation
+
+In your Gemfile:
+
+```ruby
+gem 'mongoid-undo'
+```
+
 
 ## Usage
 
@@ -20,6 +30,7 @@ class Document
   include Mongoid::Undo
 end
 ```
+
 
 ### Creating (and undoing)
 
@@ -33,6 +44,7 @@ document.persisted? #=> false
 document.redo # A nice alias for undo ;)
 document.persisted? #=> true
 ```
+
 
 ### Updating (and undoing)
 
@@ -49,6 +61,7 @@ document.redo
 document.name #=> 'bar'
 ```
 
+
 ### Destroying (and undoing)
 
 ```ruby
@@ -64,9 +77,10 @@ document.redo
 document.persisted? #=> false
 ```
 
+
 ### Callbacks
 
-Mongoid::Undo defines two callbacks which are called before and after `undo`, respectively `redo`. Both are based on `ActiveModel::Callbacks`which means they behave like the allready known Rails callbacks.
+Mongoid::Undo defines two callbacks which are called before and after `undo`, respectively `redo`. Both are based on `ActiveModel::Callbacks` which means they behave like the allready known Rails callbacks.
 
 ```ruby
 class Document
@@ -78,16 +92,9 @@ class Document
   end
 
   before_redo { false } # Don't allow redoing.
+end
 ```
 
-
-## Installation
-
-In your Gemfile:
-
-```ruby
-gem 'mongoid-undo'
-```
 
 ## Contributing
 
