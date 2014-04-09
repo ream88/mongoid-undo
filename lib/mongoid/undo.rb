@@ -9,7 +9,7 @@ module Mongoid
 
     include Mongoid::Paranoia
     include Mongoid::Versioning
-    include Mongoid::Callbacks
+    include Mongoid::Interceptable
 
     included do
       field :action, type: Symbol, versioned: false
