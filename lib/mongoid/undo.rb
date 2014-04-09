@@ -12,6 +12,8 @@ module Mongoid
     include Mongoid::Interceptable
 
     included do
+      # _id must be marked as not-versioned
+      fields['_id'].options.merge!(versioned: false)
       field :action, type: Symbol, versioned: false
       index deleted_at: 1
 
