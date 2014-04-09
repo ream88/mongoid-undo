@@ -1,5 +1,7 @@
 require 'active_support'
 require 'mongoid'
+require 'mongoid/paranoia'
+require 'mongoid/versioning'
 
 module Mongoid
   module Undo
