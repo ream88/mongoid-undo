@@ -14,10 +14,13 @@ module Mongoid
       index deleted_at: 1
 
       [:create, :update, :destroy].each do |action|
-        set_callback action, :after do
+        name = :"set_action_after_#{action}"
+
+        define_method name do
           collection.find(atomic_selector).update('$set' => { action: action })
           reload
         end
+        set_callback action, :after, name
       end
 
       define_model_callbacks :undo, :redo
