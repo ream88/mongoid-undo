@@ -129,6 +129,22 @@ class UndoTest < Minitest::Unit::TestCase
   end
 
 
+  def test_around_callback
+    document = Document.create(name: 'foo')
+    document.update_attributes name: 'bar'
+
+    tap do |test|
+      document.class.around_undo do |document, proc|
+        test.assert_equal 'bar', document.name
+        proc.call
+        test.assert_equal 'foo', document.name
+      end
+    end
+
+    document.undo
+  end
+
+
   def test_disabling_undo_via_callbacks
     document = Document.create(name: 'foo')
     document.destroy
