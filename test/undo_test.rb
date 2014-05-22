@@ -7,19 +7,12 @@ class Document
   field :name, type: String
 end
 
-class Localized
-  include Mongoid::Document
-  include Mongoid::Undo
-
+class Localized < Document
   field :language, localize: true, type: String
 end
 
-class Timestamped
-  include Mongoid::Document
-  include Mongoid::Undo
+class Timestamped < Document
   include Mongoid::Timestamps
-
-  field :name, type: String
 end
 
 class UndoTest < Minitest::Unit::TestCase
