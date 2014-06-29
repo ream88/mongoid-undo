@@ -51,7 +51,12 @@ document.persisted? #=> true
 ```ruby
 document = Document.create(name: 'foo')
 
+document.undoable? # => false
+document.save
+document.undoable? # => false
+
 document.update_attributes(name: 'bar')
+document.undoable? # => true
 document.name #=> 'bar'
 
 document.undo
