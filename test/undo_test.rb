@@ -21,36 +21,46 @@ class UndoTest < Minitest::Unit::TestCase
     assert_equal :create, document.action
     assert_equal 1, document.version
     assert document.persisted?
+    assert document.undoable?
 
     document.undo
     assert_equal :create, document.action
     assert_equal 1, document.version
     assert_not document.persisted?
+    assert document.undoable?
 
     document.redo
     assert_equal :create, document.action
     assert_equal 1, document.version
     assert document.persisted?
+    assert document.undoable?
   end
 
 
   def test_update
     document = Document.create(name: 'foo')
 
+    document.save
+    assert_not document.undoable?
+
     document.update_attributes name: 'bar'
     assert_equal :update, document.action
     assert_equal 2, document.version
     assert_equal 'bar', document.name
+    assert document.undoable?
 
     document.undo
     assert_equal :update, document.action
     assert_equal 3, document.version
     assert_equal 'foo', document.name
+    assert document.undoable?
+
 
     document.redo
     assert_equal :update, document.action
     assert_equal 4, document.version
     assert_equal 'bar', document.name
+    assert document.undoable?
   end
 
 
@@ -60,14 +70,17 @@ class UndoTest < Minitest::Unit::TestCase
     document.destroy
     assert_equal :destroy, document.action
     assert_not document.persisted?
+    assert document.undoable?
 
     document.undo
     assert_equal :destroy, document.action
     assert document.persisted?
+    assert document.undoable?
 
     document.redo
     assert_equal :destroy, document.action
     assert_not document.persisted?
+    assert document.undoable?
   end
 
 
@@ -75,6 +88,13 @@ class UndoTest < Minitest::Unit::TestCase
     document = Document.create(name: 'foo')
 
     assert_equal document.method(:undo), document.method(:redo)
+  end
+
+
+  def test_redoable_equals_to_undoable
+    document = Document.create(name: 'foo')
+
+    assert_equal document.method(:undoable?), document.method(:redoable?)
   end
 
 

@@ -18,9 +18,15 @@ module Mongoid
 
         define_method name do
           collection.find(atomic_selector).update('$set' => { action: action })
+          version = self.instance_variable_get(:@version)
           reload
+          self.instance_variable_set :@version, version unless version.nil?
         end
         set_callback action, :after, name
+      end
+
+      after_find do
+        @version = read_attribute(:version)
       end
 
       define_model_callbacks :undo, :redo
@@ -37,6 +43,16 @@ module Mongoid
       end
     end
     alias_method :redo, :undo
+
+    def undoable?
+      case action
+      when :create, :destroy
+        true
+      when :update
+        read_attribute(:version).to_i > @version
+      end
+    end
+    alias_method :redoable?, :undoable?
 
   private
     def retrieve
