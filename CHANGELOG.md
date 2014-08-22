@@ -1,5 +1,20 @@
-# 0.8.0 (March 30, 2014)
+# 0.11.0 (June 29, 2014)
+* Adds undoable? (and respectively redoable?) methods to check whether a new version was saved or not.
+
+# 0.10.1 (April 16, 2014)
+* Switches to non anonymous callbacks.
+
+# 0.10.0 (March 30, 2014)
 * Adds both callbacks for undo and redo.
+
+# 0.9.1 (February 17, 2014)
+* We are still on minitest 4. 😞
+
+# 0.9.0 (February 17, 2014)
+* Whoa! Removes ruby version from Gemfile.
+
+# 0.8.0 (February 10, 2014)
+* Fixes \#2: updated_at-columns not working anymore.
 
 # 0.7.0 (February 8, 2014)
 * Simpler tests.
