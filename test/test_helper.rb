@@ -6,6 +6,10 @@ require 'mongoid/undo'
 
 Mongoid.load!(File.expand_path('../mongoid.yml', __FILE__), 'test')
 
+if defined?(Mongo)
+  Mongo::Logger.logger.level = Logger::WARN
+end
+
 class Minitest::Test
   alias_method :assert_not, :refute
   alias_method :assert_not_equal, :refute_equal

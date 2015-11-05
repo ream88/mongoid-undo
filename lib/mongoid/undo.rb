@@ -11,6 +11,7 @@ module Mongoid
     include Mongoid::Versioning
     include Mongoid::Interceptable
 
+    # @todo Remove Mongoid 4 support.
     included do
       # _id must be marked as not-versioned
       fields['_id'].options.merge!(versioned: false)
@@ -21,7 +22,10 @@ module Mongoid
         name = :"set_action_after_#{action}"
 
         define_method name do
-          collection.find(atomic_selector).update('$set' => { action: action })
+          query = collection.find(atomic_selector)
+          set = { '$set' => { action: action }}
+
+          query.respond_to?(:update_one) ? query.update_one(set) : query.update(set)
           version = self.instance_variable_get(:@version)
           reload
           self.instance_variable_set :@version, version unless version.nil?
@@ -59,8 +63,10 @@ module Mongoid
     alias_method :redoable?, :undoable?
 
   private
+    # @todo Remove Mongoid 4 support.
     def retrieve
-      update versions.last.versioned_attributes.except('version', 'updated_at')
+      attributes = versions.last.versioned_attributes.except('version', 'updated_at')
+      respond_to?(:update_one) ? update_one(attributes) : update(attributes)
     end
   end
 end
