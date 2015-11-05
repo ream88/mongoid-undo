@@ -11,9 +11,6 @@ if defined?(Mongo)
 end
 
 class Minitest::Test
-  alias_method :assert_not, :refute
-  alias_method :assert_not_equal, :refute_equal
-
   # Copied from activesupport/lib/active_support/testing/assertions.rb
   def assert_difference(expression, difference = 1, message = nil, &block)
     expressions = Array(expression)

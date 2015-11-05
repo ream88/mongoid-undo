@@ -26,7 +26,7 @@ class UndoTest < Minitest::Test
     document.undo
     assert_equal :create, document.action
     assert_equal 1, document.version
-    assert_not document.persisted?
+    refute document.persisted?
     assert document.undoable?
 
     document.redo
@@ -41,7 +41,7 @@ class UndoTest < Minitest::Test
     document = Document.create(name: 'foo')
 
     document.save
-    assert_not document.undoable?
+    refute document.undoable?
 
     document.update_attributes name: 'bar'
     assert_equal :update, document.action
@@ -69,7 +69,7 @@ class UndoTest < Minitest::Test
 
     document.destroy
     assert_equal :destroy, document.action
-    assert_not document.persisted?
+    refute document.persisted?
     assert document.undoable?
 
     document.undo
@@ -79,7 +79,7 @@ class UndoTest < Minitest::Test
 
     document.redo
     assert_equal :destroy, document.action
-    assert_not document.persisted?
+    refute document.persisted?
     assert document.undoable?
   end
 
@@ -115,13 +115,13 @@ class UndoTest < Minitest::Test
     updated_at = document.updated_at
 
     document.update_attributes(name: 'bar')
-    assert_not_equal updated_at, document.updated_at
+    refute_equal updated_at, document.updated_at
 
     document.undo
-    assert_not_equal updated_at, document.updated_at
+    refute_equal updated_at, document.updated_at
 
     document.redo
-    assert_not_equal updated_at, document.updated_at
+    refute_equal updated_at, document.updated_at
   end
 
 
