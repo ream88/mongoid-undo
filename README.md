@@ -85,7 +85,7 @@ document.persisted? #=> false
 
 ### Callbacks
 
-Mongoid::Undo defines two callbacks which are called before and after `undo`, respectively `redo`. Both are based on `ActiveModel::Callbacks` which means they behave like the allready known Rails callbacks.
+Mongoid::Undo defines two callbacks which are called before and after `undo`, respectively `redo`. Both are based on `ActiveModel::Callbacks` which means they behave like the already known Rails callbacks.
 
 ```ruby
 class Document
