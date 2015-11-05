@@ -1,4 +1,4 @@
-# mongoid-undo
+# mongoid-undo [![Build Status](https://travis-ci.org/haihappen/mongoid-undo.svg?branch=master)](https://travis-ci.org/haihappen/mongoid-undo)
 
 Super simple undo for your Mongoid app, based on both great modules
 [Mongoid::Paranoia](http://mongoid.org/en/mongoid/docs/extras.html#paranoia) and
