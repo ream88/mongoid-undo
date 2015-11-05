@@ -17,4 +17,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'mongoid', '~> 4.0.0'
   gem.add_dependency 'mongoid-paranoia', '~> 1.0.0'
   gem.add_dependency 'mongoid-versioning', '~> 1.0.0'
+
+  gem.add_development_dependency 'minitest', '~> 5.0'
+  gem.add_development_dependency 'rake', '~> 10.0'
 end

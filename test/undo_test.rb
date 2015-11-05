@@ -15,7 +15,7 @@ class Timestamped < Document
   include Mongoid::Timestamps
 end
 
-class UndoTest < Minitest::Unit::TestCase
+class UndoTest < Minitest::Test
   def test_create
     document = Document.create(name: 'foo')
     assert_equal :create, document.action
