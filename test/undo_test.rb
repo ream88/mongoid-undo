@@ -36,7 +36,6 @@ class UndoTest < Minitest::Test
     assert document.undoable?
   end
 
-
   def test_update
     document = Document.create(name: 'foo')
 
@@ -55,14 +54,12 @@ class UndoTest < Minitest::Test
     assert_equal 'foo', document.name
     assert document.undoable?
 
-
     document.redo
     assert_equal :update, document.action
     assert_equal 4, document.version
     assert_equal 'bar', document.name
     assert document.undoable?
   end
-
 
   def test_destroy
     document = Document.create(name: 'foo')
@@ -83,20 +80,17 @@ class UndoTest < Minitest::Test
     assert document.undoable?
   end
 
-
   def test_redo_equals_to_undo
     document = Document.create(name: 'foo')
 
     assert_equal document.method(:undo), document.method(:redo)
   end
 
-
   def test_redoable_equals_to_undoable
     document = Document.create(name: 'foo')
 
     assert_equal document.method(:undoable?), document.method(:redoable?)
   end
-
 
   def test_localized_attributes
     document = Localized.create(language: 'English')
@@ -108,7 +102,6 @@ class UndoTest < Minitest::Test
     document.redo
     assert_equal 'English Updated', document.language
   end
-
 
   def test_updated_at_timestamp
     document = Timestamped.create(name: 'foo')
@@ -123,7 +116,6 @@ class UndoTest < Minitest::Test
     document.redo
     refute_equal updated_at, document.updated_at
   end
-
 
   def test_callbacks
     document = Document.create(name: 'foo')
@@ -148,7 +140,6 @@ class UndoTest < Minitest::Test
     mock.verify
   end
 
-
   def test_around_callback
     document = Document.create(name: 'foo')
     document.update_attributes name: 'bar'
@@ -164,7 +155,6 @@ class UndoTest < Minitest::Test
     document.undo
   end
 
-
   def test_disabling_undo_via_callbacks
     document = Document.create(name: 'foo')
     document.destroy
@@ -176,7 +166,6 @@ class UndoTest < Minitest::Test
       document.undo
     end
   end
-
 
   def teardown
     Document.reset_callbacks :undo

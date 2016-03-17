@@ -1,4 +1,4 @@
-$: << File.expand_path('../../lib', __FILE__)
+$LOAD_PATH << File.expand_path('../../lib', __FILE__)
 require 'minitest/autorun'
 require 'minitest/pride'
 
@@ -6,19 +6,17 @@ require 'mongoid/undo'
 
 Mongoid.load!(File.expand_path('../mongoid.yml', __FILE__), 'test')
 
-if defined?(Mongo)
-  Mongo::Logger.logger.level = Logger::WARN
-end
+Mongo::Logger.logger.level = Logger::WARN if defined?(Mongo)
 
 class Minitest::Test
   # Copied from activesupport/lib/active_support/testing/assertions.rb
   def assert_difference(expression, difference = 1, message = nil, &block)
     expressions = Array(expression)
 
-    exps = expressions.map { |e|
-      e.respond_to?(:call) ? e : lambda { eval(e, block.binding) }
-    }
-    before = exps.map { |e| e.call }
+    exps = expressions.map do |e|
+      e.respond_to?(:call) ? e : -> { eval(e, block.binding) }
+    end
+    before = exps.map(&:call)
 
     yield
 
